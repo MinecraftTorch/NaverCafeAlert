@@ -14,18 +14,19 @@
 # placeholder에 대한 내용은 https://github.com/MinecraftTorch/KRBanManager/blob/main/github/Guide/forms.md 를 확인해주세요
 
 banReport:
-  title: "[%type%] %target%"
+  title: "[%type%] %targetName%"
   lines:
     [
       # 엔터는 ,로 구별합니다.
       "<strong>종류</strong>: %type%",
+      "<strong>밴 닉네임</strong>: %targetName%",
+      "<strong>밴 UUID</strong>: %targetUUID%",
+      "<strong>밴 대상 IP</strong>: %ip%",
+      "<strong>밴 관리자</strong>: %executorName%",
       "<strong>사유</strong>: %reason%",
-      "<strong>닉네임</strong>: %username%",
-      "<strong>UUID</strong>: %uuid%",
-      "<strong>IP</strong>: %ip%",
-      "<strong>밴 종료</strong>: %ban_ends%",
-      "<strong>시각</strong>: %time%",
-      "<strong>처리 관리자</strong>: %issuer%",
+      "<strong>밴 시작 시각</strong>: %banStarts%",
+      "<strong>밴 종료 시각</strong>: %banExpires%",
+      "<strong>밴 기간</strong>: %duration%",
       "<strong>밴 처리 여부에 이의가 있으시다면, 이 글에 댓글로 항변하시기 바랍니다.</strong>"
     ]
 warningReport:

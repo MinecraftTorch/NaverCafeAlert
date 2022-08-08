@@ -6,11 +6,9 @@ import org.bukkit.event.Listener;
 
 public abstract class AbstractBanListener {
     protected String name;
-    protected CafeAPI cafeAPI;
 
-    public AbstractBanListener(CafeAPI cafeAPI) {
+    public AbstractBanListener() {
         this.name = "Abstract";
-        this.cafeAPI = cafeAPI;
     }
 
     public abstract void mainEventHandler();
