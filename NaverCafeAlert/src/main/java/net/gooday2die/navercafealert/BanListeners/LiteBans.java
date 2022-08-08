@@ -4,18 +4,16 @@ import litebans.api.Entry;
 import litebans.api.Events;
 import net.gooday2die.navercafealert.Common.BanInfo;
 import net.gooday2die.navercafealert.Common.Utils;
-import net.gooday2die.navercafealert.NaverAPI.CafeAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class LiteBans extends AbstractBanListener {
-    private APIListener apiListener;
-    public LiteBans(CafeAPI cafeAPI) {
-        super(cafeAPI);
+    private final APIListener apiListener;
+    public LiteBans() {
         apiListener = new APIListener();
         this.mainEventHandler();
     }
@@ -25,9 +23,7 @@ public class LiteBans extends AbstractBanListener {
         Events.get().register(apiListener);
     }
 
-    private class APIListener extends Events.Listener {
-        private SimpleDateFormat df = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm초");
-
+    private static class APIListener extends Events.Listener {
         /**
          * Called after an entry (ban, mute, warning, kick) is added to the database.
          */
@@ -46,7 +42,7 @@ public class LiteBans extends AbstractBanListener {
         public void entryRemoved(Entry entry) {
             System.out.println("REMOVAL");
             System.out.println(entry.getType());
-            System.out.println(entry.toString());
+            System.out.println(entry);
 
             String issuer = entry.getExecutorName();
             String issuerUUID = entry.getExecutorUUID();
@@ -79,9 +75,12 @@ public class LiteBans extends AbstractBanListener {
             Date start = new Date(entry.getDateStart());
             Date end = new Date(entry.getDateEnd());
 
+            // Check IP for unknown IPs.
+            String ip = Objects.equals(entry.getIp(), "#") ? "알수없음" : entry.getIp();
+
             // Generate a BanInfo according to the information from Entry.
             BanInfo banInfo = new BanInfo(target, entry.getUuid(), entry.getExecutorName(), entry.getExecutorUUID(),
-                    entry.getReason(), entry.getIp(), start, end, entry.getDuration(), entry.isIpban());
+                    entry.getReason(), ip, start, end, entry.getDuration(), entry.isIpban());
 
             System.out.println(banInfo);
         }
