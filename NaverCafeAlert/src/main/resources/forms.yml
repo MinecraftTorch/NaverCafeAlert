@@ -1,0 +1,54 @@
+#  ________   ________  ___      ___ _______   ________          ________  ________  ________ _______
+# |\   ___  \|\   __  \|\  \    /  /|\  ___ \ |\   __  \        |\   ____\|\   __  \|\  _____\\  ___ \
+# \ \  \\ \  \ \  \|\  \ \  \  /  / | \   __/|\ \  \|\  \       \ \  \___|\ \  \|\  \ \  \__/\ \   __/|
+#  \ \  \\ \  \ \   __  \ \  \/  / / \ \  \_|/_\ \   _  _\       \ \  \    \ \   __  \ \   __\\ \  \_|/__
+#   \ \  \\ \  \ \  \ \  \ \    / /   \ \  \_|\ \ \  \\  \|       \ \  \____\ \  \ \  \ \  \_| \ \  \_|\ \
+#    \ \__\\ \__\ \__\ \__\ \__/ /     \ \_______\ \__\\ _\        \ \_______\ \__\ \__\ \__\   \ \_______\
+#     \|__| \|__|\|__|\|__|\|__|/       \|_______|\|__|\|__|        \|_______|\|__|\|__|\|__|    \|_______|
+#
+# KRBanManager 템플릿
+# 프로젝트 페이지: https://github.com/MinecraftTorch/KRBanManager/
+#
+# forms.yml
+# 네이버 카페에 작성할 양식을 설정합니다.
+# placeholder에 대한 내용은 https://github.com/MinecraftTorch/KRBanManager/blob/main/github/Guide/forms.md 를 확인해주세요
+
+banReport:
+  title: "[%type%] %target%"
+  lines:
+    [
+      # 엔터는 ,로 구별합니다.
+      "<strong>종류</strong>: %type%",
+      "<strong>사유</strong>: %reason%",
+      "<strong>닉네임</strong>: %username%",
+      "<strong>UUID</strong>: %uuid%",
+      "<strong>IP</strong>: %ip%",
+      "<strong>밴 종료</strong>: %ban_ends%",
+      "<strong>시각</strong>: %time%",
+      "<strong>처리 관리자</strong>: %issuer%",
+      "<strong>밴 처리 여부에 이의가 있으시다면, 이 글에 댓글로 항변하시기 바랍니다.</strong>"
+    ]
+warningReport:
+  title: "[경고] %target% - %warn_count% / 3"
+  lines:
+    [
+      # 엔터는 ,로 구별합니다.
+      "<strong>사유</strong>: %reason%",
+      "<strong>누적 경고 횟수</strong>: %warn_count% / 3 (3회시 영구밴입니다)",
+      "<strong>시각</strong>: %time%",
+      "<strong>처리 관리자</strong>: %issuer%",
+      "<strong>경고 처리 여부에 이의가 있으시다면, 이 글에 댓글로 항변하시기 바랍니다.</strong>"
+    ]
+userReport:
+  title: "[신고] %target%"
+  lines:
+    [
+      # 엔터는 ,로 구별합니다.
+      "<strong>신고자</strong>: %issuer%",
+      "<strong>신고 대상자</strong>: %target%",
+      "<strong>사유</strong>: %reason%",
+      "<strong>시각</strong>: %time%",
+      "<strong>신고자 위치</strong>: %reporter_info%",
+      "<strong>신고자</strong>: %issuer%",
+      "<strong>관리자께서는 해당 신고를 처리후 결과를 게시글에 댓글을 달아주시기 바랍니다.</strong>"
+    ]

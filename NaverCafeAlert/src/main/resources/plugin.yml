@@ -1,0 +1,7 @@
+name: NaverCafeAlert
+version: '${project.version}'
+main: net.gooday2die.navercafealert.NaverCafeAlert
+api-version: 1.19
+authors: [ Gooday2die ]
+description: 마인크래프트 서버에서 일어나는 상황을 서버에 실시간으로 연동합니다.
+softdepend: [LiteBans]
