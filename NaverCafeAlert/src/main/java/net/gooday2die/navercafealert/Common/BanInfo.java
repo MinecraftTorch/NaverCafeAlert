@@ -4,6 +4,10 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 
+
+/**
+ * A class that stores ban information.
+ */
 public class BanInfo {
     public String targetName;
     public String targetUUID;
