@@ -6,18 +6,19 @@
 #    \ \__\\ \__\ \__\ \__\ \__/ /     \ \_______\ \__\\ _\        \ \_______\ \__\ \__\ \__\   \ \_______\
 #     \|__| \|__|\|__|\|__|\|__|/       \|_______|\|__|\|__|        \|_______|\|__|\|__|\|__|    \|_______|
 #
-# KRBanManager 템플릿
-# 프로젝트 페이지: https://github.com/MinecraftTorch/KRBanManager/
+# NaverCafeAlert 템플릿
+# 프로젝트 페이지: https://github.com/MinecraftTorch/NaverCafeAlert
 #
 # forms.yml
 # 네이버 카페에 작성할 양식을 설정합니다.
-# placeholder에 대한 내용은 https://github.com/MinecraftTorch/KRBanManager/blob/main/github/Guide/forms.md 를 확인해주세요
+# placeholder 에 대한 내용은 프로젝트 페이지의 wiki 를 확인해주세요.
 
 banReport:
   title: "[%type%] %targetName%"
   lines:
     [
       # 엔터는 ,로 구별합니다.
+      "<center><img src=https://i.imgur.com/wPEchUS.png border=0></center>",
       "<strong>종류</strong>: %type%",
       "<strong>밴 닉네임</strong>: %targetName%",
       "<strong>밴 UUID</strong>: %targetUUID%",

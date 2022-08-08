@@ -1,1 +1,23 @@
+#
+#
+#
+#
+#
+
+# 1. 네이버 카페 설정
+# cafeRefreshToken 은 https://mctor.ch/minecraftcafe/ 에 들어가셔서 네이버 로그인을 하시면 발급 받을 수 있습니다.
+cafeRefreshToken: ""
+# ClubId 는 사용하실 네이버 카페에 들어가신 후, "카페관리" 메뉴에 들어가시면 알 수 있습니다.
+# 만일 해당 "카페관리" 메뉴에 들어가셨는데 상단 주소가 https://cafe.naver.com/ManageHome.nhn?clubid=12345678 이라고 나오신다면
+# cafeClubId는 12345678 을 적어주시면 됩니다.
+cafeClubId: 1234
+# cafeBanReportEnabled 는 유저가 밴을 당하 네이버 카페에 내용을 올리는지에 대한 여부입니다. 허용시 true, 비허용시 false.
+cafeBanReportEnabled: true
+# cafeBanBoardId 관리자가 유저를 밴 했을 시 해당 내용이 올라갈 게시판의 ID 입니다.
+cafeBanBoardId: 1234
+# cafeWarningReportEnabled 는 유저가 경고를 받으면 네이버 카페에 경고 내용을 올리는지에 대한 여부입니다. 허용시 true, 비허용시 false.
+cafeWarningReportEnabled: true
+# cafeWarningBoardId 관리자가 특정 유저에게 경고를 지급했을 시 내용이 올라갈 게시판의 ID 입니다.
+cafeWarningBoardId: 1234
+# dateFormat 은 게시판에 밴 만료일, 밴 시작일을 작성할 떄 사용하는 포멧입니다.
 dateFormat: "yyyy년 MM월 dd일 HH시 mm분 ss초"
