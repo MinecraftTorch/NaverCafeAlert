@@ -126,33 +126,47 @@ public class LiteBans extends AbstractBanListener {
             // Store start, end date as Date format.
             Date issuedDate = new Date(entry.getDateStart());
             String ip = entry.getIp();
+            int warnCount = Math.max(this.getWarnCount(ip), this.getWarnCount(entry.getUuid()));
 
             WarnInfo warnInfo = new WarnInfo(target, entry.getUuid(), entry.getExecutorName(), entry.getExecutorUUID(),
-                    entry.getReason(), ip, issuedDate);
+                    entry.getReason(), ip, issuedDate, warnCount);
+
+
 
             if (Settings.cafeWarningReportEnabled) this.postArticle(warnInfo); // If warn report was enabled, post it.
         }
 
-        private long getWarnCount(String target) {
+        /**
+         * A private method that gets warn counts from LiteBans db by uuid or IP
+         * @param target The target uuid or ip.
+         * @return Max warn count if warn count by uuid or ip was different.
+         */
+        private int getWarnCount(String target) {
+            // Generate query string.
             String query1 = "SELECT * from {warnings} WHERE uuid=?";
             String query2 = "SELECT * from {warnings} WHERE ip=?";
 
-            long querySize1 = 0;
-            long querySize2 = 0;
+            int querySize1 = 0;
+            int querySize2 = 0;
 
+            // Query using PreparedStatement
             try (PreparedStatement statement1 = Database.get().prepareStatement(query1); PreparedStatement statement2 = Database.get().prepareStatement(query2)) {
                 statement1.setString(1, target);
                 statement2.setString(1, target);
 
+                // Store warn counts.
                 try (ResultSet resultSet1 = statement1.executeQuery(); ResultSet resultSet2 = statement2.executeQuery()) {
-                    querySize1 = resultSet1.getFetchSize();
-                    querySize2 = resultSet2.getFetchSize();
+                    resultSet1.last();
+                    resultSet2.last();
+                    querySize1 = resultSet1.getRow();
+                    querySize2 = resultSet2.getRow();
                 }
-            } catch (SQLException e) {
+            } catch (SQLException e) { // If something went wrong, return -1.
                 e.printStackTrace();
+                return -1;
             }
-
-            return (querySize1 > querySize2) ? querySize1 : querySize2;
+            // Return bigger value.
+            return Math.max(querySize1, querySize2);
         }
     }
 }
