@@ -1,9 +1,6 @@
 package net.gooday2die.navercafealert.BanListeners;
 
-import net.gooday2die.navercafealert.Common.AbstractInfo;
-import net.gooday2die.navercafealert.Common.BanInfo;
-import net.gooday2die.navercafealert.Common.Settings;
-import net.gooday2die.navercafealert.Common.WarnInfo;
+import net.gooday2die.navercafealert.Common.*;
 import net.gooday2die.navercafealert.NaverAPI.CafeAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,6 +22,12 @@ public interface IBanAPIListener {
     void processWarn(@Nullable Object o);
 
     /**
+     * A method that processes mute by Object provided.
+     * @param o The Object to process mute information.
+     */
+    void processMute(@Nullable Object o);
+
+    /**
      * A method that posts article using NaverCafe API.
      * @param info The AbstractInfo to post article.
      */
@@ -38,6 +41,8 @@ public interface IBanAPIListener {
                 cafeURL = Settings.cafeAPI.post((BanInfo) info);
             } else if (info instanceof WarnInfo) { // If this was WarnInfo.
                 cafeURL = Settings.cafeAPI.post((WarnInfo) info);
+            } else if (info instanceof MuteInfo) { // If this was MuteInfo.
+                cafeURL = Settings.cafeAPI.post((MuteInfo) info);
             }
 
             // Print log to console.

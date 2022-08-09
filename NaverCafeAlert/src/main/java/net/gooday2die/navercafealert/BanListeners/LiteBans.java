@@ -47,11 +47,12 @@ public class LiteBans extends AbstractBanListener {
          */
         @Override
         public void entryAdded(Entry entry) {
-            if (entry.getType().equals("ban")) { // If this was ban.
+            if (entry.getType().equals("ban"))  // If this was ban.
                 this.processBan(entry);
-            } else if (entry.getType().equals("warn")) { // If this was warn.
+             else if (entry.getType().equals("warn"))  // If this was a warning.
                 this.processWarn(entry);
-            }
+             else if (entry.getType().equals("mute")) // If this was a mute.
+                 this.processMute(entry);
         }
 
         /**
@@ -93,6 +94,7 @@ public class LiteBans extends AbstractBanListener {
             }
 
             // Store start, end date as Date format.
+            assert entry != null;
             Date start = new Date(entry.getDateStart());
             Date end = new Date(entry.getDateEnd());
 
@@ -115,11 +117,14 @@ public class LiteBans extends AbstractBanListener {
             String target;
 
             try { // Try translating UUID into username.
+                assert entry != null;
                 target = Utils.translateUUIDtoUsername(entry.getUuid());
             } catch (Exception e) { // When any exception happened.
                 e.printStackTrace();
                 Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[NaverCafeAlert]" + ChatColor.WHITE +
                         " 에러가 발생했습니다. 해당 에러를 신고해주세요!");
+                target = "알수없음";
+            } catch (AssertionError e) {
                 target = "알수없음";
             }
 
@@ -129,11 +134,39 @@ public class LiteBans extends AbstractBanListener {
             int warnCount = Math.max(this.getWarnCount(ip), this.getWarnCount(entry.getUuid()));
 
             WarnInfo warnInfo = new WarnInfo(target, entry.getUuid(), entry.getExecutorName(), entry.getExecutorUUID(),
-                    entry.getReason(), ip, issuedDate, warnCount);
-
-
+                    entry.getReason(), ip, issuedDate, warnCount, entry.isIpban());
 
             if (Settings.cafeWarningReportEnabled) this.postArticle(warnInfo); // If warn report was enabled, post it.
+        }
+
+        /**
+         * A method that processes mute by Object provided.
+         * @param object The Object to process mute information.
+         */
+        @Override
+        public void processMute(@Nullable Object object) {
+            Entry entry = (Entry) object;
+            String target;
+
+            try { // Try translating UUID into username.
+                assert entry != null;
+                target = Utils.translateUUIDtoUsername(entry.getUuid());
+            } catch (Exception e) { // When any exception happened.
+                e.printStackTrace();
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[NaverCafeAlert]" + ChatColor.WHITE +
+                        " 에러가 발생했습니다. 해당 에러를 신고해주세요!");
+                target = "알수없음";
+            } catch (AssertionError e) {
+                target = "알수없음";
+            }
+
+            Date startDate = new Date(entry.getDateStart());
+            Date endDate = new Date(entry.getDateStart());
+
+            MuteInfo muteInfo = new MuteInfo(target, entry.getUuid(), entry.getExecutorName(), entry.getExecutorUUID(),
+                    entry.getReason(), entry.getIp(), startDate, endDate, entry.getDuration(), entry.isIpban());
+
+            if (Settings.cafeMuteReportEnabled) this.postArticle(muteInfo); // If warn report was enabled, post it.
         }
 
         /**
@@ -146,8 +179,8 @@ public class LiteBans extends AbstractBanListener {
             String query1 = "SELECT * from {warnings} WHERE uuid=?";
             String query2 = "SELECT * from {warnings} WHERE ip=?";
 
-            int querySize1 = 0;
-            int querySize2 = 0;
+            int querySize1;
+            int querySize2;
 
             // Query using PreparedStatement
             try (PreparedStatement statement1 = Database.get().prepareStatement(query1); PreparedStatement statement2 = Database.get().prepareStatement(query2)) {

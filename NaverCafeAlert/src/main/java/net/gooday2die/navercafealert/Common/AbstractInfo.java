@@ -12,6 +12,9 @@ public abstract class AbstractInfo {
     public String executorName;
     public String executorUUID;
     public String reason;
+    public String ip;
+    public boolean isIpPunishment;
+
 
     /**
      * A public method that overrides toString.

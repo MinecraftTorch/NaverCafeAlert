@@ -6,39 +6,38 @@ import java.util.UUID;
 
 
 /**
- * A class that stores ban information.
+ * A class that stores mute information.
  */
-public class BanInfo extends AbstractInfo {
-    public String ip;
-    public Date banExpires;
-    public Date banStarts;
+public class MuteInfo extends AbstractInfo {
+    public Date muteExpires;
+    public Date muteStarts;
     public long duration;
 
     /**
-     * A constructor method for class BanInfo.
+     * A constructor method for class MuteInfo
      * @param targetName The target's name.
      * @param targetUUID The target's UUID.
      * @param executorName The executor's name.
      * @param executorUUID The executor's UUID.
      * @param reason The reason for unban.
      * @param ip The IP of target.
-     * @param banExpires The Date when ban expires.
-     * @param banStarts The Date when ban starts.
+     * @param muteExpires The Date when ban expires.
+     * @param muteStarts The Date when ban starts.
      * @param duration The long type duration.
-     * @param isIpBan If this is an IP ban or not.
+     * @param isIPMute If this was IP mute or not.
      */
-    public BanInfo(String targetName, String targetUUID, String executorName, String executorUUID, String reason,
-                   String ip, Date banExpires, Date banStarts, long duration, boolean isIpBan) {
+    public MuteInfo(String targetName, String targetUUID, String executorName, String executorUUID, String reason,
+                    String ip, Date muteExpires, Date muteStarts, long duration, boolean isIPMute) {
         this.targetName = targetName;
         this.targetUUID = targetUUID;
         this.executorName = executorName;
-        this.executorUUID = executorUUID;
+        this.executorUUID =executorUUID;
         this.reason = reason;
         this.ip = ip;
-        this.banExpires = banExpires;
-        this.banStarts = banStarts;
+        this.muteExpires = muteExpires;
+        this.muteStarts = muteStarts;
         this.duration = duration;
-        this.isIpPunishment = isIpBan;
+        this.isIpPunishment = isIPMute;
 
         this.translateValues();
     }
@@ -48,8 +47,8 @@ public class BanInfo extends AbstractInfo {
      */
     @Override
     protected void translateValues() {
-        translatedContent = this.translateString(Settings.forms.get("banReport"));
-        translatedTitle = this.translateString(Settings.formTitles.get("banReport"));
+        translatedContent = this.translateString(Settings.forms.get("muteReport"));
+        translatedTitle = this.translateString(Settings.formTitles.get("muteReport"));
     }
 
     /**
@@ -61,14 +60,15 @@ public class BanInfo extends AbstractInfo {
     protected String translateString(String originalString) {
         String outString = originalString;
 
-        // There are two types of banning. IP ban and normal ban.
-        if (isIpPunishment) {
-            outString = outString.replace("%type%", "IP 밴");
-            outString = outString.replace("%target%", ip);
-        }
-        else {
-            outString = outString.replace("%type%", "일반 밴");
+        // mute might be by IP or username.
+        if (!isIpPunishment) {
             outString = outString.replace("%target%", targetName);
+            outString = outString.replace("%type%", "유저 채팅차단");
+            outString = outString.replace("%ip%", "알수없음");
+        } else {
+            outString = outString.replace("%target%", ip);
+            outString = outString.replace("%type%", "IP 채팅차단");
+            outString = outString.replace("%ip%", ip);
         }
 
         // Replace %targetUUID% placeholder
@@ -79,27 +79,23 @@ public class BanInfo extends AbstractInfo {
             outString = outString.replace("%targetUUID%", "알수없음");
         }
 
-        // Replace other placeholders.
-        outString = outString.replace("%reason%", reason);
-        outString = outString.replace("%targetUUID%", targetUUID);
-        outString = outString.replace("%executorName%", executorName);
-        outString = outString.replace("%executorUUID%", executorUUID);
-        outString = outString.replace("%ip%", ip);
-
         // Replace ban specific placeholders.
         if (duration == -1) { // If duration was -1, this is permanent ban.
-            outString = outString.replace("%duration%", "영구밴");
-            outString = outString.replace("%banExpires%", "해당 없음");
-            outString = outString.replace("%banStarts%", Settings.df.format(new Date()));
+            outString = outString.replace("%duration%", "영구 채팅차단");
+            outString = outString.replace("%muteExpires%", "해당 없음");
+            outString = outString.replace("%muteStarts%", Settings.df.format(new Date()));
         } else { // If this was normal ban, calculate duration using Duration.
             long days = Duration.ofSeconds(duration / 1000).toDays(); // Get days of duration.
             long minutes = Duration.ofSeconds((duration / 1000) - days * 86400).toMinutes(); // Get remaining minutes of duration.
             String durationString = String.format("%d일 %d분", days, minutes);
 
             // Replace placeholders.
+            outString = outString.replace("%reason%", reason);
             outString = outString.replace("%duration%", durationString);
-            outString = outString.replace("%banExpires%", Settings.df.format(banExpires));
-            outString = outString.replace("%banStarts%", Settings.df.format(banStarts));
+            outString = outString.replace("%executorName%", executorName);
+            outString = outString.replace("%executorUUID%", executorUUID);
+            outString = outString.replace("%muteExpires%", Settings.df.format(muteExpires));
+            outString = outString.replace("%muteStarts%", Settings.df.format(muteStarts));
         }
         return outString;
     }
