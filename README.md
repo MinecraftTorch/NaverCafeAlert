@@ -1,6 +1,9 @@
 # Naver Cafe Alert
 마인크래프트 서버에서 일어나는 일들을 실시간으로 네이버 카페에 올리는 플러그인입니다.
 
+## ScreenShot
+사진이 많습니다. [여기](/Screenshots.md)를 확인해주세요.
+
 ## Feature
 - **밴 처리시** 네이버 카페에 자동으로 등록
 -  **경고 처리시** 네이버 카페에 자동으로 등록
@@ -25,7 +28,7 @@ NaverCafeAlert 는 처벌 플러그인들과 연결하여 자동으로 네이버
 ## Download & Installation
 1. 프로젝트 [Release 페이지](https://github.com/MinecraftTorch/NaverCafeAlert/releases/latest)를 방문해주세요.
 2. 최신 버전의 `.jar` 파일을 받고 `./plugins` 폴더에 넣어주세요.
-3. `config.yml` 과 `forms.yml` 의 설정을 바꿔야 합니다. [이 페이지](/Guide.md)를 참고해주세요.
+3. `config.yml` 과 `forms.yml` 의 설정을 바꿔야 합니다. [이 페이지](/guide.md)를 참고해주세요.
 
 ## Issues & PR
 만일 플러그인을 사용하시다가 발생하는 버그들은 [Issues](https://github.com/MinecraftTorch/NaverCafeAlert/issues) 로 **양식에 맞춰** 제보해주세요.
