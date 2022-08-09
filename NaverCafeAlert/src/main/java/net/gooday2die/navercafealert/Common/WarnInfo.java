@@ -6,9 +6,10 @@ import java.util.UUID;
 public class WarnInfo extends AbstractInfo {
     public String ip;
     public Date issuedDate;
+    public int warnCount;
 
     public WarnInfo(String targetName, String targetUUID, String executorName, String executorUUID, String reason,
-                    String ip, Date issuedDate) {
+                    String ip, Date issuedDate, int warnCount) {
         this.targetName = targetName;
         this.targetUUID = targetUUID;
         this.executorName = executorName;
@@ -16,6 +17,7 @@ public class WarnInfo extends AbstractInfo {
         this.reason = reason;
         this.ip = ip;
         this.issuedDate = issuedDate;
+        this.warnCount = warnCount;
 
         this.translateValues();
     }
@@ -62,6 +64,7 @@ public class WarnInfo extends AbstractInfo {
         outString = outString.replace("%executorName%", executorName);
         outString = outString.replace("%executorUUID%", executorUUID);
         outString = outString.replace("%issuedDate%", Settings.df.format(issuedDate));
+        outString = outString.replace("%warnCount%", Integer.toString(warnCount));
 
         return outString;
     }

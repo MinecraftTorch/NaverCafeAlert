@@ -31,7 +31,7 @@ banReport:
       "<strong>밴 처리 여부에 이의가 있으시다면, 이 글에 댓글로 항변하시기 바랍니다.</strong>"
     ]
 warningReport:
-  title: "[%type%] %target% - %warnCount% / 3"
+  title: "[%type%] %target% - 누적 %warnCount% 회 경고"
   lines:
     [
       # 엔터는 ,로 구별합니다.
@@ -43,6 +43,6 @@ warningReport:
       "<strong>경고 관리자</strong>: %executorName%",
       "<strong>사유</strong>: %reason%",
       "<strong>경고 시각</strong>: %issuedDate%",
-      "<strong>누적 경고 횟수</strong>: %warnCount% / 3 (3회시 영구밴입니다)",
+      "<strong>누적 경고 횟수</strong>: %warnCount%",
       "<strong>경고 처리 여부에 이의가 있으시다면, 이 글에 댓글로 항변하시기 바랍니다.</strong>"
     ]
