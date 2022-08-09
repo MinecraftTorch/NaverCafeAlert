@@ -2,6 +2,7 @@ package net.gooday2die.navercafealert.NaverAPI;
 
 import net.gooday2die.navercafealert.Common.BanInfo;
 import net.gooday2die.navercafealert.Common.Settings;
+import net.gooday2die.navercafealert.Common.WarnInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.json.JSONException;
@@ -18,11 +19,15 @@ import java.net.URLEncoder;
 import java.util.Date;
 
 
+/**
+ * A class that takes care of everything related to Naver Cafe API.
+ */
 public class CafeAPI {
     private String authToken;
     private Date lastRefresh;
     private int refreshExpires;
     private boolean isDisabled = false;
+    private int failureCount = 0;
 
     /**
      * A constructor method that initializes CafeAPI class.
@@ -72,7 +77,11 @@ public class CafeAPI {
                 else // If response code was not 200, throw exception.
                     throw new TokenRefreshFailedException();
             }
-        } catch (IOException | JSONException e) { // If connection failed or was not able to find access_token from result
+        } catch (IOException | JSONException e) { // If connection failed or was not able to find access_token from result.
+            e.printStackTrace();
+            failureCount++; // Increment failure count.
+            if (failureCount > Settings.naverMaxFailureCount)
+                isDisabled = true;
             throw new TokenRefreshFailedException(); // throw exception.
         }
     }
@@ -100,6 +109,20 @@ public class CafeAPI {
     public String post(BanInfo banInfo)
             throws PostFailedException, NaverCafeAPIDisabledException, TokenRefreshFailedException {
         return this.writeArticle(Settings.cafeBanBoardId, banInfo.translatedTitle, banInfo.translatedContent);
+    }
+
+    /**
+     * A method that posts article to Naver Cafe for WarnInfo.
+     * This method will write warn report to Naver Cafe.
+     * @param warnInfo The WarnInfo to report to Naver Cafe.
+     * @return The URL that this article was posted.
+     * @throws PostFailedException When posting article failed due to any reason.
+     * @throws NaverCafeAPIDisabledException When Naver Cafe API was disabled before but was trying to use Naver API.
+     * @throws TokenRefreshFailedException When refreshing token failed with any kind of errors or exceptions.
+     */
+    public String post(WarnInfo warnInfo)
+            throws PostFailedException, NaverCafeAPIDisabledException, TokenRefreshFailedException {
+        return this.writeArticle(Settings.cafeBanBoardId, warnInfo.translatedTitle, warnInfo.translatedContent);
     }
 
     /**
@@ -203,8 +226,10 @@ public class CafeAPI {
             }
         } catch (Exception e) { // If connecting or requesting POST failed
             e.printStackTrace();
-            isDisabled = true;
-            throw new PostFailedException(e.toString());
+            failureCount++; // Increment failure count.
+            if (failureCount > Settings.naverMaxFailureCount)
+                isDisabled = true;
+            throw new TokenRefreshFailedException(); // throw exception.
         }
     }
 

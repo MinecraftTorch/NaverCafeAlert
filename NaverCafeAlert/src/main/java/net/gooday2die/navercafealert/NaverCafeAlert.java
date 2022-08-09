@@ -2,7 +2,6 @@ package net.gooday2die.navercafealert;
 
 import net.gooday2die.navercafealert.BanListeners.LiteBans;
 import net.gooday2die.navercafealert.Common.Settings;
-import net.gooday2die.navercafealert.NaverAPI.CafeAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,14 +10,26 @@ import java.io.File;
 import java.nio.file.Paths;
 
 public final class NaverCafeAlert extends JavaPlugin {
+    /**
+     * A private method that detects Ban Managers.
+     * Supported Ban managers:
+     * - LiteBans from <a href="https://www.spigotmc.org/resources/litebans.3715/">here</a>
+     */
+    private void detectBanManager() {
+        if (Bukkit.getPluginManager().getPlugin("LiteBans") != null) {
+            Settings.abstractBanListener = new LiteBans();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[KRBanMGR] " +
+                    ChatColor.GREEN + "LiteBans" + ChatColor.WHITE + " 플러그인에 연결했습니다.");
+        }
+    }
 
     @Override
     public void onEnable() {
         Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert]" + ChatColor.WHITE +
                 " 플러그인을 활성화중입니다...");
 
-        Settings.abstractBanListener = new LiteBans();
         Settings.thisPlugin = this;
+        this.detectBanManager();
 
         saveDefaultConfig();
         // If forms.yml does not exist, generate one

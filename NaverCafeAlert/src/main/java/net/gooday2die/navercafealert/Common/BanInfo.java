@@ -1,6 +1,5 @@
 package net.gooday2die.navercafealert.Common;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 
@@ -8,19 +7,12 @@ import java.util.Date;
 /**
  * A class that stores ban information.
  */
-public class BanInfo {
-    public String targetName;
-    public String targetUUID;
-    public String executorName;
-    public String executorUUID;
-    public String reason;
+public class BanInfo extends AbstractInfo {
     public String ip;
     public Date banExpires;
     public Date banStarts;
     public long duration;
     public boolean isIpBan;
-    public String translatedTitle;
-    public String translatedContent;
 
     /**
      * A constructor method for class BanInfo.
@@ -52,28 +44,21 @@ public class BanInfo {
     }
 
     /**
-     * A method that overrides toString()
-     * @return Returns fields in order as String.
+     * A protected method that translates title and content automatically.
      */
     @Override
-    public String toString() {
-        return translatedTitle + " : " + translatedContent;
-    }
-
-    /**
-     * A private method that replaces placeholders in forms into values of this BanInfo fields.
-     */
-    public void translateValues() {
+    protected void translateValues() {
         translatedContent = this.translateString(Settings.forms.get("banReport"));
         translatedTitle = this.translateString(Settings.formTitles.get("banReport"));
     }
 
     /**
-     * A private method that replaces placeholders from original String.
+     * A protected method that translates originalString into String using placeholders.
      * @param originalString The original String to replace placeholders.
      * @return The translated String.
      */
-    private String translateString(String originalString) {
+    @Override
+    protected String translateString(String originalString) {
         String outString = originalString;
 
         // There are two types of banning. IP ban and normal ban.
@@ -85,8 +70,6 @@ public class BanInfo {
             outString = outString.replace("%type%", "일반 밴");
             outString = outString.replace("%targetName%", targetName);
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM개월 dd일 HH시 mm분 ss초");
 
         // Replace other placeholders.
         outString = outString.replace("%reason%", reason);

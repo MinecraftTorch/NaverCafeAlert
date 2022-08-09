@@ -22,12 +22,12 @@ import java.util.*;
 public class Settings {
     static public String cafeRefreshToken;
     static public int cafeClubId;
-
     static public int cafeBanBoardId;
     static public int cafeWarningBoardId;
     static public boolean cafeBanReportEnabled;
     static public boolean cafeWarningReportEnabled;
-
+    static public int naverMaxRetryCount;
+    static public int naverMaxFailureCount;
     static public Map<String, String> forms = new HashMap<>(); // For storing forms from forms.yml.
     static public Map<String, String> formTitles = new HashMap<>(); // For storing titles from forms.yml.
     static public JavaPlugin thisPlugin; // For storing this plugin.
@@ -71,6 +71,8 @@ public class Settings {
         Settings.cafeBanBoardId = config.getInt("cafeBanBoardId");
         Settings.cafeWarningReportEnabled = config.getBoolean("cafeWarningReportEnabled");
         Settings.cafeWarningBoardId = config.getInt("cafeWarningBoardId");
+        Settings.naverMaxRetryCount = config.getInt("naverMaxRetryCount");
+        Settings.naverMaxFailureCount = config.getInt("naverMaxFailureCount");
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[NaverCafeAlert]" + ChatColor.WHITE + "config.yml 을 성공적으로 불러왔습니다.");
     }
