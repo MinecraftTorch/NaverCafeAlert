@@ -1,4 +1,7 @@
-# Naver Cafe Alert
+![Title](https://i.imgur.com/wPEchUS.png)
+
+![language](https://img.shields.io/github/languages/top/MinecraftTorch/NaverCafeAlert) ![maintainability](https://img.shields.io/codeclimate/maintainability/MinecraftTorch/NaverCafeAlert) ![downloads](https://img.shields.io/github/downloads/MinecraftTorch/NaverCafeAlert/total) ![enter image description here](https://img.shields.io/github/license/MinecraftTorch/NaverCafeAlert) ![enter image description here](https://img.shields.io/github/v/release/MinecraftTorch/NaverCafeAlert)
+
 마인크래프트 서버에서 일어나는 일들을 실시간으로 네이버 카페에 올리는 플러그인입니다.
 
 ## ScreenShot
