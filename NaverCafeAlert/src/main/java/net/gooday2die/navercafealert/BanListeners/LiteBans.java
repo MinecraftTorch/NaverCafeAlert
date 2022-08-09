@@ -1,5 +1,6 @@
 package net.gooday2die.navercafealert.BanListeners;
 
+import litebans.api.Database;
 import litebans.api.Entry;
 import litebans.api.Events;
 import net.gooday2die.navercafealert.Common.*;
@@ -7,6 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nullable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -127,6 +131,28 @@ public class LiteBans extends AbstractBanListener {
                     entry.getReason(), ip, issuedDate);
 
             if (Settings.cafeWarningReportEnabled) this.postArticle(warnInfo); // If warn report was enabled, post it.
+        }
+
+        private long getWarnCount(String target) {
+            String query1 = "SELECT * from {warnings} WHERE uuid=?";
+            String query2 = "SELECT * from {warnings} WHERE ip=?";
+
+            long querySize1 = 0;
+            long querySize2 = 0;
+
+            try (PreparedStatement statement1 = Database.get().prepareStatement(query1); PreparedStatement statement2 = Database.get().prepareStatement(query2)) {
+                statement1.setString(1, target);
+                statement2.setString(1, target);
+
+                try (ResultSet resultSet1 = statement1.executeQuery(); ResultSet resultSet2 = statement2.executeQuery()) {
+                    querySize1 = resultSet1.getFetchSize();
+                    querySize2 = resultSet2.getFetchSize();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return (querySize1 > querySize2) ? querySize1 : querySize2;
         }
     }
 }
