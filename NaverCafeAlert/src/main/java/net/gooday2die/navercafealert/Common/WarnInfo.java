@@ -4,12 +4,11 @@ import java.util.Date;
 import java.util.UUID;
 
 public class WarnInfo extends AbstractInfo {
-    public String ip;
     public Date issuedDate;
     public int warnCount;
 
     public WarnInfo(String targetName, String targetUUID, String executorName, String executorUUID, String reason,
-                    String ip, Date issuedDate, int warnCount) {
+                    String ip, Date issuedDate, int warnCount, boolean isIpWarn) {
         this.targetName = targetName;
         this.targetUUID = targetUUID;
         this.executorName = executorName;
@@ -18,6 +17,7 @@ public class WarnInfo extends AbstractInfo {
         this.ip = ip;
         this.issuedDate = issuedDate;
         this.warnCount = warnCount;
+        this.isIpPunishment = isIpWarn;
 
         this.translateValues();
     }
@@ -41,7 +41,7 @@ public class WarnInfo extends AbstractInfo {
         String outString = originalString;
 
         // Warn might be by IP or username.
-        if (ip == null || ip.equals("#")) {
+        if (!isIpPunishment) {
             outString = outString.replace("%target%", targetName);
             outString = outString.replace("%type%", "유저 경고");
             outString = outString.replace("%ip%", "알수없음");

@@ -46,3 +46,20 @@ warningReport:
       "<strong>누적 경고 횟수</strong>: %warnCount%",
       "<strong>경고 처리 여부에 이의가 있으시다면, 이 글에 댓글로 항변하시기 바랍니다.</strong>"
     ]
+muteReport:
+  title: "[%type%] %target% - %duration%"
+  lines:
+    [
+      # 엔터는 ,로 구별합니다.
+        "<center><img src=https://i.imgur.com/wPEchUS.png border=0></center>",
+        "<strong>종류</strong>: %type%",
+        "<strong>채팅차단 대상 (닉네임 또는 IP)</strong>: %target%",
+        "<strong>채팅차단 UUID</strong>: %targetUUID%",
+        "<strong>채팅차단 대상 IP</strong>: %ip%",
+        "<strong>채팅차단 관리자</strong>: %executorName%",
+        "<strong>사유</strong>: %reason%",
+        "<strong>채팅차단 시작 시각</strong>: %muteStarts%",
+        "<strong>채팅차단 종료 시각</strong>: %muteExpires%",
+        "<strong>채팅차단 기간</strong>: %duration%",
+        "<strong>채팅차단 처리 여부에 이의가 있으시다면, 이 글에 댓글로 항변하시기 바랍니다.</strong>"
+    ]

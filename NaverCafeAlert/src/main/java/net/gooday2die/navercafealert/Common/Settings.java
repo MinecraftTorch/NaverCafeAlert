@@ -24,8 +24,10 @@ public class Settings {
     static public int cafeClubId;
     static public int cafeBanBoardId;
     static public int cafeWarningBoardId;
+    static public int cafeMuteBoardId;
     static public boolean cafeBanReportEnabled;
     static public boolean cafeWarningReportEnabled;
+    static public boolean cafeMuteReportEnabled;
     static public int naverMaxRetryCount;
     static public int naverMaxFailureCount;
     static public Map<String, String> forms = new HashMap<>(); // For storing forms from forms.yml.
@@ -38,8 +40,7 @@ public class Settings {
 
     /**
      * A static method that loads config.yml and forms.yml
-     *
-     * @throws SettingsInitFailedException
+     * @throws SettingsInitFailedException When loading config.yml or forms.yml failed.
      */
     public static void loadSettings() throws SettingsInitFailedException {
         Path formsPath = Paths.get(Settings.thisPlugin.getDataFolder().getAbsolutePath(), "forms.yml");
@@ -73,6 +74,8 @@ public class Settings {
         Settings.cafeWarningBoardId = config.getInt("cafeWarningBoardId");
         Settings.naverMaxRetryCount = config.getInt("naverMaxRetryCount");
         Settings.naverMaxFailureCount = config.getInt("naverMaxFailureCount");
+        Settings.cafeMuteReportEnabled = config.getBoolean("cafeMuteReportEnabled");
+        Settings.cafeMuteBoardId = config.getInt("cafeMuteBoardId");
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[NaverCafeAlert]" + ChatColor.WHITE + "config.yml 을 성공적으로 불러왔습니다.");
     }
@@ -107,8 +110,31 @@ public class Settings {
             e.printStackTrace();
             throw new SettingsInitFailedException();
         }
+
+        verifyForms();
     }
 
+    /**
+     * A private method that verifies if forms.yml is ok.
+     * @throws SettingsInitFailedException If anything was wrong with forms.yml
+     */
+    private static void verifyForms() throws SettingsInitFailedException {
+        // Check if forms.yml has three keys.
+        if (Settings.forms.keySet().equals(new HashSet<>(Arrays.asList("banReport", "warningReport", "muteReport")))) {
+            for (String formName : Settings.forms.keySet()) { // Iterate over keys and check title and content.
+                String lines = Settings.forms.get(formName);
+                String title = Settings.formTitles.get(formName);
+                // If any of them are null, throw exception.
+                if (lines == null || title == null) throw new SettingsInitFailedException();
+            }
+        } else { // If forms.yml does not have three keys, throw exception.
+            throw new SettingsInitFailedException();
+        }
+    }
+
+    /**
+     * An Exception class for when something went wrong with config.yml or forms.yml
+     */
     public static class SettingsInitFailedException extends Exception {
     }
 }

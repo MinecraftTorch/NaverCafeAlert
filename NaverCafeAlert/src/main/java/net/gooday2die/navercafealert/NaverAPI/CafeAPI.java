@@ -1,6 +1,7 @@
 package net.gooday2die.navercafealert.NaverAPI;
 
 import net.gooday2die.navercafealert.Common.BanInfo;
+import net.gooday2die.navercafealert.Common.MuteInfo;
 import net.gooday2die.navercafealert.Common.Settings;
 import net.gooday2die.navercafealert.Common.WarnInfo;
 import org.bukkit.Bukkit;
@@ -136,6 +137,20 @@ public class CafeAPI {
     public String post(WarnInfo warnInfo)
             throws PostFailedException, NaverCafeAPIDisabledException, TokenRefreshFailedException {
         return this.writeArticle(Settings.cafeWarningBoardId, warnInfo.translatedTitle, warnInfo.translatedContent);
+    }
+
+    /**
+     * A method that posts article to Naver Cafe for MuteInfo.
+     * This method will write mute report to Naver Cafe.
+     * @param muteInfo The MuteInfo to report to Naver Cafe.
+     * @return The URL that this article was posted.
+     * @throws PostFailedException When posting article failed due to any reason.
+     * @throws NaverCafeAPIDisabledException When Naver Cafe API was disabled before but was trying to use Naver API.
+     * @throws TokenRefreshFailedException When refreshing token failed with any kind of errors or exceptions.
+     */
+    public String post(MuteInfo muteInfo)
+            throws PostFailedException, NaverCafeAPIDisabledException, TokenRefreshFailedException {
+        return this.writeArticle(Settings.cafeWarningBoardId, muteInfo.translatedTitle, muteInfo.translatedContent);
     }
 
     /**
