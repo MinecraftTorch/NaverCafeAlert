@@ -2,6 +2,7 @@ package net.gooday2die.navercafealert.Common;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.UUID;
 
 
 /**
@@ -64,11 +65,19 @@ public class BanInfo extends AbstractInfo {
         // There are two types of banning. IP ban and normal ban.
         if (isIpBan) {
             outString = outString.replace("%type%", "IP 밴");
-            outString = outString.replace("%targetName%", ip);
+            outString = outString.replace("%target%", ip);
         }
         else {
             outString = outString.replace("%type%", "일반 밴");
-            outString = outString.replace("%targetName%", targetName);
+            outString = outString.replace("%target%", targetName);
+        }
+
+        // Replace %targetUUID% placeholder
+        try {
+            UUID tmpUUID = UUID.fromString(targetUUID);
+            outString = outString.replace("%targetUUID%", targetUUID);
+        } catch (IllegalArgumentException e) { // If this uuid is not valid, set it unknown.
+            outString = outString.replace("%targetUUID%", "알수없음");
         }
 
         // Replace other placeholders.
