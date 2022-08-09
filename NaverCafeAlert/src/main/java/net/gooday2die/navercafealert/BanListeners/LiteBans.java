@@ -35,9 +35,9 @@ public class LiteBans extends AbstractBanListener {
 
     /**
      * A private class that is for taking care of extending Events.Listener for LiteBans API.
-     * Tried to use interface for this class. However Events.Listener i
+     * This implements IBanAPIListener and extends Events.Listener for LiteBansAPI.
      */
-    private static class LiteBansAPIListener extends Events.Listener implements IBanAPIListener{
+    private static class LiteBansAPIListener extends Events.Listener implements IBanAPIListener {
         /**
          * Called after an entry (ban, mute, warning, kick) is added to the database.
          */
@@ -121,7 +121,7 @@ public class LiteBans extends AbstractBanListener {
 
             // Store start, end date as Date format.
             Date issuedDate = new Date(entry.getDateStart());
-            String ip = (Objects.equals(entry.getIp(), "#") || entry.getIp() == null) ? "알수없음" : entry.getIp();
+            String ip = entry.getIp();
 
             WarnInfo warnInfo = new WarnInfo(target, entry.getUuid(), entry.getExecutorName(), entry.getExecutorUUID(),
                     entry.getReason(), ip, issuedDate);

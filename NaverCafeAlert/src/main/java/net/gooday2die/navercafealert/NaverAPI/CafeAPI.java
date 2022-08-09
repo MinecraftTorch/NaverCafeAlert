@@ -27,7 +27,7 @@ public class CafeAPI {
     private Date lastRefresh;
     private int refreshExpires;
     private boolean isDisabled = false;
-    private int failureCount = 0;
+    private int totalFailCount = 0;
 
     /**
      * A constructor method that initializes CafeAPI class.
@@ -79,8 +79,8 @@ public class CafeAPI {
             }
         } catch (IOException | JSONException e) { // If connection failed or was not able to find access_token from result.
             e.printStackTrace();
-            failureCount++; // Increment failure count.
-            if (failureCount > Settings.naverMaxFailureCount)
+            totalFailCount++; // Increment failure count.
+            if (totalFailCount > Settings.naverMaxFailureCount)
                 isDisabled = true;
             throw new TokenRefreshFailedException(); // throw exception.
         }
@@ -108,7 +108,20 @@ public class CafeAPI {
      */
     public String post(BanInfo banInfo)
             throws PostFailedException, NaverCafeAPIDisabledException, TokenRefreshFailedException {
-        return this.writeArticle(Settings.cafeBanBoardId, banInfo.translatedTitle, banInfo.translatedContent);
+        int failCount = 0;
+        while (failCount <= Settings.naverMaxRetryCount) { // Try writing article for naverMaxRetryCount times.
+            try {
+                return this.writeArticle(Settings.cafeBanBoardId, banInfo.translatedTitle, banInfo.translatedContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failCount++;
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert]" + ChatColor.WHITE +
+                        " 카페에 게시글을 작성하지 못했습니다. 재시도중 ..." + ChatColor.GREEN + failCount + ChatColor.WHITE +
+                        " / " + Settings.naverMaxRetryCount);
+                if (failCount == Settings.naverMaxRetryCount) throw e; // Throw the latest exception if this was last.
+            }
+        }
+        throw new IllegalStateException(); // Code should never hit here.
     }
 
     /**
@@ -122,7 +135,7 @@ public class CafeAPI {
      */
     public String post(WarnInfo warnInfo)
             throws PostFailedException, NaverCafeAPIDisabledException, TokenRefreshFailedException {
-        return this.writeArticle(Settings.cafeBanBoardId, warnInfo.translatedTitle, warnInfo.translatedContent);
+        return this.writeArticle(Settings.cafeWarningBoardId, warnInfo.translatedTitle, warnInfo.translatedContent);
     }
 
     /**
@@ -141,9 +154,7 @@ public class CafeAPI {
             throw new NaverCafeAPIDisabledException();
         }
 
-        this.refreshAuthToken();
-
-        if (this.needTokenRefreshing())
+        if (this.needTokenRefreshing()) // Check if token needs refreshing.
             try {
                 this.refreshAuthToken();
             } catch (TokenRefreshFailedException e) {
@@ -224,12 +235,12 @@ public class CafeAPI {
                 JSONObject result = message.getJSONObject("result");
                 return result.getString("articleUrl");
             }
-        } catch (Exception e) { // If connecting or requesting POST failed
+        } catch (Exception e) { // If connecting or requesting POST failed.
             e.printStackTrace();
-            failureCount++; // Increment failure count.
-            if (failureCount > Settings.naverMaxFailureCount)
+            totalFailCount++; // Increment failure count.
+            if (totalFailCount > Settings.naverMaxFailureCount)
                 isDisabled = true;
-            throw new TokenRefreshFailedException(); // throw exception.
+            throw new PostFailedException(e.getMessage()); // Throw exception.
         }
     }
 
