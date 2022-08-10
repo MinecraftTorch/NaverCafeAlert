@@ -1,5 +1,6 @@
 package net.gooday2die.navercafealert;
 
+import net.gooday2die.navercafealert.BanListeners.AdvancedBan;
 import net.gooday2die.navercafealert.BanListeners.LiteBans;
 import net.gooday2die.navercafealert.Common.Settings;
 import org.bukkit.Bukkit;
@@ -20,6 +21,10 @@ public final class NaverCafeAlert extends JavaPlugin {
             Settings.abstractBanListener = new LiteBans();
             Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[KRBanMGR] " +
                     ChatColor.GREEN + "LiteBans" + ChatColor.WHITE + " 플러그인에 연결했습니다.");
+        } else if (Bukkit.getPluginManager().getPlugin("AdvancedBan") != null) {
+            Settings.abstractBanListener = new AdvancedBan();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[KRBanMGR] " +
+                    ChatColor.GREEN + "AdvancedBan" + ChatColor.WHITE + " 플러그인에 연결했습니다.");
         }
     }
 
