@@ -55,7 +55,7 @@ public class Settings {
      */
     private static void loadConfig() {
         FileConfiguration config = Settings.thisPlugin.getConfig(); // Load config
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[NaverCafeAlert]" + ChatColor.WHITE + "config.yml 을 불러오는 중입니다...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert]" + ChatColor.WHITE + " config.yml 을 불러오는 중입니다...");
 
         // Load dateFormat from config.yml
         String dateFormat = config.getString("dateFormat");
@@ -77,7 +77,7 @@ public class Settings {
         Settings.cafeMuteReportEnabled = config.getBoolean("cafeMuteReportEnabled");
         Settings.cafeMuteBoardId = config.getInt("cafeMuteBoardId");
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[NaverCafeAlert]" + ChatColor.WHITE + "config.yml 을 성공적으로 불러왔습니다.");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[NaverCafeAlert]" + ChatColor.WHITE + " config.yml 을 성공적으로 불러왔습니다.");
     }
 
     /**
@@ -86,8 +86,8 @@ public class Settings {
      * @throws SettingsInitFailedException When forms.yml was not located. Which shall never happen.
      */
     private static void loadForms(Path formsPath) throws SettingsInitFailedException {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert] " +
-                ChatColor.WHITE + "forms.yml 을 불러오는 중입니다...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert]" +
+                ChatColor.WHITE + " forms.yml 을 불러오는 중입니다...");
 
         // Load forms.yml
         try { // Try loading forms.yml
@@ -105,7 +105,7 @@ public class Settings {
                 Settings.formTitles.put(formName, title); // Save title for form.
             }
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[NaverCafeAlert]" + ChatColor.WHITE +
-                    ChatColor.WHITE + "forms.yml 을 성공적으로 불러왔습니다.");
+                    ChatColor.WHITE + " forms.yml 을 성공적으로 불러왔습니다.");
         } catch (FileNotFoundException e) {  // This should never happen.
             e.printStackTrace();
             throw new SettingsInitFailedException();

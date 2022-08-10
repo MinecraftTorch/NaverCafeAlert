@@ -1,10 +1,15 @@
 package net.gooday2die.navercafealert;
 
+import me.leoko.advancedban.bukkit.event.PunishmentEvent;
+import me.leoko.advancedban.bukkit.event.RevokePunishmentEvent;
 import net.gooday2die.navercafealert.BanListeners.AdvancedBan;
 import net.gooday2die.navercafealert.BanListeners.LiteBans;
 import net.gooday2die.navercafealert.Common.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -19,12 +24,30 @@ public final class NaverCafeAlert extends JavaPlugin {
     private void detectBanManager() {
         if (Bukkit.getPluginManager().getPlugin("LiteBans") != null) {
             Settings.abstractBanListener = new LiteBans();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[KRBanMGR] " +
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert] " +
                     ChatColor.GREEN + "LiteBans" + ChatColor.WHITE + " 플러그인에 연결했습니다.");
         } else if (Bukkit.getPluginManager().getPlugin("AdvancedBan") != null) {
             Settings.abstractBanListener = new AdvancedBan();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[KRBanMGR] " +
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert] " +
                     ChatColor.GREEN + "AdvancedBan" + ChatColor.WHITE + " 플러그인에 연결했습니다.");
+        }
+    }
+
+    private class avls implements Listener {
+        @EventHandler
+        public void onPunishmentEvent(PunishmentEvent e) {
+            System.out.println("PunishmentEvent fired.");
+            System.out.println(e.getPunishment());
+        }
+        @EventHandler
+        public void onRevokePunishmentEvent(RevokePunishmentEvent e) {
+            System.out.println("RevokePunishmentEvent fired.");
+            System.out.println(e.getPunishment());
+        }
+
+        @EventHandler
+        public void onPlayerJoin(PlayerJoinEvent e) {
+            System.out.println(e.getPlayer().getName());
         }
     }
 
@@ -53,6 +76,9 @@ public final class NaverCafeAlert extends JavaPlugin {
                     " 설정을 읽어오는데 에러가 발생했습니다. 플러그인을 종료합니다.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+
+        Bukkit.getServer().getPluginManager().registerEvents(new avls(), this);
+
     }
 
     @Override

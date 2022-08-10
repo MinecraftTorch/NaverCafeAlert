@@ -16,7 +16,6 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -52,7 +51,6 @@
             </resource>
         </resources>
     </build>
-
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
@@ -66,9 +64,7 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
