@@ -1,6 +1,10 @@
 package net.gooday2die.navercafealert.BanListeners;
 
+import net.gooday2die.navercafealert.Common.BanInfo;
 import net.gooday2die.navercafealert.Common.Settings;
+import net.gooday2die.navercafealert.Common.Utils;
+import org.bukkit.BanEntry;
+import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,17 +12,17 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 /**
  * A class that takes care of plugins without support of API.
  * This will monitor each command using EventHandlers and check if they are punishment commands.
+ * This class will take care of normal bans without any plugin related.
  */
 public class NormalBanListener extends AbstractBanListener implements Listener {
     private final List<String> banKeywords = new ArrayList<>();
+    private final List<String> ipBanKeywords = new ArrayList<>();
     private final List<String> warnKeywords = new ArrayList<>();
     private final List<String> muteKeywords = new ArrayList<>();
     private final NormalBanHandler normalBanHandler = new NormalBanHandler();
@@ -49,7 +53,7 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
      */
     private void generatePunishmentKeywords() {
         this.banKeywords.add("ban");
-        this.banKeywords.add("ban-ip");
+        this.ipBanKeywords.add("ban-ip");
         this.banKeywords.add("밴");
 
         this.warnKeywords.add("warn");
@@ -65,7 +69,7 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
      * @return A CommandType that matches the provided command.
      */
     private CommandType getCommandType(String command) {
-        if (this.banKeywords.contains(command)) return CommandType.ban;
+        if (this.banKeywords.contains(command) || this.ipBanKeywords.contains(command)) return CommandType.ban;
         else if (this.muteKeywords.contains(command)) return CommandType.mute;
         else if (this.warnKeywords.contains(command)) return CommandType.warn;
         else return CommandType.irrelevant;
@@ -89,7 +93,11 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         String command = event.getMessage().replace("/", ""); // If this was user's command, remove /.
         List<String> items = new ArrayList<>(Arrays.asList(command.split(" "))); // Split whitespaces.
-        this.processCommon(items);
+        String issuerName = event.getPlayer().getName();
+        String issuerUUID = event.getPlayer().getUniqueId().toString();
+
+        CommandInfo commandInfo = new CommandInfo(issuerName, issuerUUID, items);
+        this.processCommon(commandInfo);
     }
 
     /**
@@ -101,29 +109,56 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
     public void onServerCommand(ServerCommandEvent event) {
         String command = event.getCommand();
         List<String> items = new ArrayList<>(Arrays.asList(command.split(" "))); // Split whitespaces.
-        this.processCommon(items);
+
+        CommandInfo commandInfo = new CommandInfo("Console", "Console", items);
+        this.processCommon(commandInfo);
     }
 
     /**
      * A private method that processes common parts from player's command and console's command.
      * This will check if this command was a punishment command or not and decides what to do with it.
-     * @param items List of String that represents commands.
+     * @param commandInfo The CommandInfo of this current issued command.
      */
-    private void processCommon(List<String> items) {
-        CommandType type = this.getCommandType(items.get(0));
+    private void processCommon(CommandInfo commandInfo) {
+        if (commandInfo.items.size() <= 1) return; // Meaning that this command was not valid
+        CommandType type = this.getCommandType(commandInfo.items.get(0));
 
-        switch (type) {
-            case ban:
-                this.normalBanHandler.processBan(items);
+        switch (type) { // Check type of this command and process it.
+            case ban: // Ban has two types, thus find out if this is ip ban or not.
+                if (ipBanKeywords.contains(commandInfo.items.get(0))) commandInfo.isIPPunishment = true;
+                this.normalBanHandler.processBan(commandInfo);
                 break;
             case mute:
-                this.normalBanHandler.processMute(items);
+                this.normalBanHandler.processMute(commandInfo);
                 break;
             case warn:
-                this.normalBanHandler.processWarn(items);
+                this.normalBanHandler.processWarn(commandInfo);
                 break;
             case irrelevant:
                 break;
+        }
+    }
+
+    /**
+     * A private class that stores command information.
+     * This will store issuer's information as well as command.
+     */
+    private static class CommandInfo {
+        public String issuerName;
+        public String issuerUUID;
+        public List<String> items;
+        public boolean isIPPunishment;
+
+        /**
+         * A constructor method for class CommandInfo
+         * @param issuerName The issuer's name.
+         * @param issuerUUID The issuer's uuid.
+         * @param items The List of String that represents the command.
+         */
+        public CommandInfo(String issuerName, String issuerUUID, List<String> items) {
+            this.issuerName = issuerName;
+            this.issuerUUID = issuerUUID;
+            this.items = items;
         }
     }
 
@@ -135,35 +170,81 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
         /**
          * A method that processes ban by Object provided.
          * This method will to generate BanInfo instance and call PostArticle using the BanInfo created.
-         * @param object The Object to process ban information.
+         * @param object The Object (CommandInfo) to process ban information.
          */
         @Override
-        public void processBan(@Nullable Object object) {
-            System.out.println("BAN");
-            System.out.println(object);
+        public void processBan(@Nullable Object object){
+            CommandInfo commandInfo = (CommandInfo) object;
+            BanList banList;
+
+            // For storing all information.
+            assert commandInfo != null;
+            String target = commandInfo.items.get(1);
+            String ip = "알수없음";
+            String targetUUID;
+            String targetName;
+            Date banStarts;
+            Date banExpires;
+            boolean isIPBan = commandInfo.isIPPunishment;
+            String reason;
+            long duration;
+
+            // Check if this is an IP punishment.
+            // Then place values accordingly.
+            if (commandInfo.isIPPunishment) { // If this is IP ban.
+                banList = Bukkit.getBanList(BanList.Type.IP);
+                ip = target;
+                targetName = "알수없음";
+                targetUUID = "알수없음";
+            } else { // If this is normal user ban.
+                banList = Bukkit.getBanList(BanList.Type.NAME);
+                targetName = target;
+                try { // Try retrieving UUID from username
+                    targetUUID = Utils.translateUsernameToUUID(targetName);
+                } catch (Exception e) { // If exception found, just set it unknown.
+                    targetUUID = "알수없음";
+                }
+            }
+
+            // Get BanEntry by the target
+            BanEntry banEntry = banList.getBanEntry(target);
+            assert banEntry != null;
+
+            // Get information on ban.
+            banStarts = banEntry.getCreated();
+            banExpires = banEntry.getExpiration();
+            reason = banEntry.getReason();
+
+            if (banExpires == null) { // If this is permanent ban, banExpires will be null.
+                duration = -1;
+            } else // If this was normal ban.
+                duration = banExpires.getTime() - banStarts.getTime();
+
+            // Generate BanInfo using the information.
+            BanInfo banInfo = new BanInfo(targetName, targetUUID, commandInfo.issuerName, commandInfo.issuerUUID,
+                    reason, ip, banExpires, banStarts, duration, isIPBan);
+
+            if (Settings.cafeBanReportEnabled) this.postArticle(banInfo);
         }
 
         /**
          * A method that processes warn by Object provided.
          * This method will generate WarnInfo instance and call PostArticle using the WarnInfo created.
-         * @param object The Object to process warn information.
+         * @param object The Object (CommandInfo) to process warn information.
          */
         @Override
         public void processWarn(@Nullable Object object) {
-            System.out.println("WARN");
-            System.out.println(object);
+
         }
 
         /**
          * A method that processes mute by Object provided.
          * This method will generate MuteInfo instance and call PostArticle using the MuteInfo created.
-         *
-         * @param object The Object to process mute information.
+         * @param object The Object (CommandInfo) to process mute information.
          */
         @Override
         public void processMute(@Nullable Object object) {
-            System.out.println("MUTE");
-            System.out.println(object);
+
         }
     }
 }
