@@ -60,7 +60,6 @@ public class Utils {
 
         // Try parsing result.
         JSONObject jsonObject = parseOutput(con);
-        System.out.println(jsonObject);
 
         // Parse UUID using regex since Mojang returns UUID with no dashes.
         // Check https://stackoverflow.com/questions/18986712/creating-a-uuid-from-a-string-with-no-dashes for more info.
