@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -120,23 +121,28 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
      * @param commandInfo The CommandInfo of this current issued command.
      */
     private void processCommon(CommandInfo commandInfo) {
-        if (commandInfo.items.size() <= 1) return; // Meaning that this command was not valid
-        CommandType type = this.getCommandType(commandInfo.items.get(0));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (commandInfo.items.size() <= 1) return; // Meaning that this command was not valid
+                CommandType type = getCommandType(commandInfo.items.get(0));
 
-        switch (type) { // Check type of this command and process it.
-            case ban: // Ban has two types, thus find out if this is ip ban or not.
-                if (ipBanKeywords.contains(commandInfo.items.get(0))) commandInfo.isIPPunishment = true;
-                this.normalBanHandler.processBan(commandInfo);
-                break;
-            case mute:
-                this.normalBanHandler.processMute(commandInfo);
-                break;
-            case warn:
-                this.normalBanHandler.processWarn(commandInfo);
-                break;
-            case irrelevant:
-                break;
-        }
+                switch (type) { // Check type of this command and process it.
+                    case ban: // Ban has two types, thus find out if this is ip ban or not.
+                        if (ipBanKeywords.contains(commandInfo.items.get(0))) commandInfo.isIPPunishment = true;
+                        normalBanHandler.processBan(commandInfo);
+                        break;
+                    case mute:
+                        normalBanHandler.processMute(commandInfo);
+                        break;
+                    case warn:
+                        normalBanHandler.processWarn(commandInfo);
+                        break;
+                    case irrelevant:
+                        break;
+                }
+            }
+        }.runTaskAsynchronously(Settings.thisPlugin);
     }
 
     /**

@@ -6,10 +6,6 @@ import net.gooday2die.navercafealert.BanListeners.NormalBanListener;
 import net.gooday2die.navercafealert.Common.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
