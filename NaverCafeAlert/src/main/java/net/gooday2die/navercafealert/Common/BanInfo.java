@@ -24,7 +24,7 @@ public class BanInfo extends AbstractInfo {
      * @param ip The IP of target.
      * @param banExpires The Date when ban expires.
      * @param banStarts The Date when ban starts.
-     * @param duration The long type duration.
+     * @param duration The long type duration. If this was set -1, it means forever.
      * @param isIpBan If this is an IP ban or not.
      */
     public BanInfo(String targetName, String targetUUID, String executorName, String executorUUID, String reason,

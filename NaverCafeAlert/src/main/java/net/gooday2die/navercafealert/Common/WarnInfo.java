@@ -3,10 +3,25 @@ package net.gooday2die.navercafealert.Common;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * A class that stores warn information.
+ */
 public class WarnInfo extends AbstractInfo {
     public Date issuedDate;
     public int warnCount;
 
+    /**
+     * A constructor method for class WarnInfo
+     * @param targetName The target's name.
+     * @param targetUUID The target's UUID.
+     * @param executorName The executor's name.
+     * @param executorUUID The executor's UUID.
+     * @param reason The reason for unban.
+     * @param ip The IP of target.
+     * @param issuedDate The date when this warning was issued.
+     * @param warnCount The total warning count of this user. If this was set -99, it means unknown.
+     * @param isIpWarn If this was ip warn or not.
+     */
     public WarnInfo(String targetName, String targetUUID, String executorName, String executorUUID, String reason,
                     String ip, Date issuedDate, int warnCount, boolean isIpWarn) {
         this.targetName = targetName;
