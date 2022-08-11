@@ -23,7 +23,7 @@ public class MuteInfo extends AbstractInfo {
      * @param ip The IP of target.
      * @param muteExpires The Date when ban expires.
      * @param muteStarts The Date when ban starts.
-     * @param duration The long type duration.
+     * @param duration The long type duration. If this was set -1, it means forever.
      * @param isIPMute If this was IP mute or not.
      */
     public MuteInfo(String targetName, String targetUUID, String executorName, String executorUUID, String reason,
@@ -80,7 +80,7 @@ public class MuteInfo extends AbstractInfo {
         }
 
         // Replace ban specific placeholders.
-        if (duration == -1) { // If duration was -1, this is permanent ban.
+        if (duration == -1 || muteExpires == null) { // If duration was -1 or expiration was null, this is permanent ban.
             outString = outString.replace("%duration%", "영구 채팅차단");
             outString = outString.replace("%muteExpires%", "해당 없음");
             outString = outString.replace("%muteStarts%", Settings.df.format(new Date()));
@@ -88,15 +88,15 @@ public class MuteInfo extends AbstractInfo {
             long days = Duration.ofSeconds(duration / 1000).toDays(); // Get days of duration.
             long minutes = Duration.ofSeconds((duration / 1000) - days * 86400).toMinutes(); // Get remaining minutes of duration.
             String durationString = String.format("%d일 %d분", days, minutes);
-
-            // Replace placeholders.
-            outString = outString.replace("%reason%", reason);
-            outString = outString.replace("%duration%", durationString);
-            outString = outString.replace("%executorName%", executorName);
-            outString = outString.replace("%executorUUID%", executorUUID);
             outString = outString.replace("%muteExpires%", Settings.df.format(muteExpires));
             outString = outString.replace("%muteStarts%", Settings.df.format(muteStarts));
+            outString = outString.replace("%duration%", durationString);
         }
+
+        // Replace placeholders.
+        outString = outString.replace("%reason%", reason);
+        outString = outString.replace("%executorName%", executorName);
+        outString = outString.replace("%executorUUID%", executorUUID);
         return outString;
     }
 }

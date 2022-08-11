@@ -1,9 +1,6 @@
 package net.gooday2die.navercafealert.BanListeners;
 
-import net.gooday2die.navercafealert.Common.BanInfo;
-import net.gooday2die.navercafealert.Common.Settings;
-import net.gooday2die.navercafealert.Common.Utils;
-import net.gooday2die.navercafealert.Common.WarnInfo;
+import net.gooday2die.navercafealert.Common.*;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.BanEntry;
 import org.bukkit.BanList;
@@ -280,7 +277,35 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
          */
         @Override
         public void processMute(@Nullable Object object) {
+            CommandInfo commandInfo = (CommandInfo) object;
 
+            // For storing all information.
+            assert commandInfo != null;
+            String targetName = commandInfo.items.get(1);
+            String targetUUID;
+            String reason;
+
+            try { // Try retrieving UUID from username
+                targetUUID = Utils.translateUsernameToUUID(targetName);
+            } catch (Exception e) { // If exception found, just set it unknown.
+                targetUUID = "알수없음";
+            }
+
+            // Generate reason since it is /warn is not a regular command
+            try { // Try getting sublist of reasonList from index 2. Since index 1 is the user's name.
+                List<String> reasonList = commandInfo.items.subList(2, commandInfo.items.size());
+                reason = StringUtils.join(reasonList, " ");
+            } catch (IndexOutOfBoundsException e) { // If index 2 was not found or something went wrong, set unknown.
+                reason = "알수없음";
+            }
+
+            // Generate mute information using command that was parsed.
+            // Since we are just looking at command, we are not able to know following values
+            // 1. If this is ip mute or not, 2. Mute expiration date, 3. Mute duration, 4. IP
+            // Those 4 information will be set unknown and the mute report will always be set permanent mute.
+            MuteInfo muteInfo = new MuteInfo(targetName, targetUUID, commandInfo.issuerName, commandInfo.issuerUUID,
+                    reason, "알수없음", null, new Date(), -1, false);
+            if (Settings.cafeMuteReportEnabled) this.postArticle(muteInfo);
         }
     }
 }
