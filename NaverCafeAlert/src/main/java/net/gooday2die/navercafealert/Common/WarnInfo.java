@@ -64,7 +64,12 @@ public class WarnInfo extends AbstractInfo {
         outString = outString.replace("%executorName%", executorName);
         outString = outString.replace("%executorUUID%", executorUUID);
         outString = outString.replace("%issuedDate%", Settings.df.format(issuedDate));
-        outString = outString.replace("%warnCount%", Integer.toString(warnCount));
+
+        // When warnCount could not be found.
+        if (warnCount == -99)
+            outString = outString.replace("%warnCount%", "알수없음");
+        else
+            outString = outString.replace("%warnCount%", Integer.toString(warnCount));
 
         return outString;
     }

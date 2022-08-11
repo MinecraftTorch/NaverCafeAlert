@@ -196,7 +196,7 @@ public class LiteBans extends AbstractBanListener {
                 }
             } catch (SQLException e) { // If something went wrong, return -1.
                 e.printStackTrace();
-                return -1;
+                return -99;
             }
             // Return bigger value.
             return Math.max(querySize1, querySize2);

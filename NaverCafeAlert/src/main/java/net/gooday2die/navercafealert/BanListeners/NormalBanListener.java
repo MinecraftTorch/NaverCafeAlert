@@ -3,6 +3,8 @@ package net.gooday2die.navercafealert.BanListeners;
 import net.gooday2die.navercafealert.Common.BanInfo;
 import net.gooday2die.navercafealert.Common.Settings;
 import net.gooday2die.navercafealert.Common.Utils;
+import net.gooday2die.navercafealert.Common.WarnInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.BanEntry;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -240,7 +242,35 @@ public class NormalBanListener extends AbstractBanListener implements Listener {
          */
         @Override
         public void processWarn(@Nullable Object object) {
+            CommandInfo commandInfo = (CommandInfo) object;
 
+            // For storing all information.
+            assert commandInfo != null;
+            String targetName = commandInfo.items.get(1);
+            String targetUUID;
+            String reason;
+
+            try { // Try retrieving UUID from username
+                targetUUID = Utils.translateUsernameToUUID(targetName);
+            } catch (Exception e) { // If exception found, just set it unknown.
+                targetUUID = "알수없음";
+            }
+
+            // Generate reason since it is /warn is not a regular command
+            try { // Try getting sublist of reasonList from index 2. Since index 1 is the user's name.
+                List<String> reasonList = commandInfo.items.subList(2, commandInfo.items.size());
+                reason = StringUtils.join(reasonList, " ");
+            } catch (IndexOutOfBoundsException e) { // If index 2 was not found or something went wrong, set unknown.
+                reason = "알수없음";
+            }
+
+            // Generate WarnInfo using the information.
+            // Since when we are using just command parsing, it is not possible to get information on
+            // IP and if this was ip warn or not including total warn count.
+            WarnInfo warnInfo = new WarnInfo(targetName, targetUUID, commandInfo.issuerName, commandInfo.issuerUUID,
+                    reason, "알수없음", new Date(), -99, false);
+
+            if (Settings.cafeWarningReportEnabled) this.postArticle(warnInfo);
         }
 
         /**
