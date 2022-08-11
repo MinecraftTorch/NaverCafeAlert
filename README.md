@@ -1,7 +1,7 @@
 
 # Naver Cafe Alert
 
-![language](https://img.shields.io/github/languages/top/MinecraftTorch/NaverCafeAlert) ![maintainability](https://img.shields.io/codeclimate/maintainability/MinecraftTorch/NaverCafeAlert) ![downloads](https://img.shields.io/github/downloads/MinecraftTorch/NaverCafeAlert/total) ![enter image description here](https://img.shields.io/github/license/MinecraftTorch/NaverCafeAlert) ![enter image description here](https://img.shields.io/github/v/release/MinecraftTorch/NaverCafeAlert)
+![language](https://img.shields.io/github/languages/top/MinecraftTorch/NaverCafeAlert) [![CodeFactor](https://www.codefactor.io/repository/github/minecrafttorch/navercafealert/badge)](https://www.codefactor.io/repository/github/minecrafttorch/navercafealert) ![downloads](https://img.shields.io/github/downloads/MinecraftTorch/NaverCafeAlert/total) ![enter image description here](https://img.shields.io/github/license/MinecraftTorch/NaverCafeAlert) ![enter image description here](https://img.shields.io/github/v/release/MinecraftTorch/NaverCafeAlert)
 
 마인크래프트 서버에서 일어나는 일들을 실시간으로 네이버 카페에 올리는 플러그인입니다.
 
@@ -23,6 +23,8 @@
 동작 확인 버전:
 - 1.19.1
 - 1.19
+- 1.18
+- 이론상 1.15 ~ 는 다 됩니다.
 
 ## Supported Plugins
 NaverCafeAlert 는 처벌 플러그인들과 연결하여 자동으로 네이버 카페에 게시글을 작성합니다. 현재 지원하는 처벌 플러그인들은 다음과 같습니다:
