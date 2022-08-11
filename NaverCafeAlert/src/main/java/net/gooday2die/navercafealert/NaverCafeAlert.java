@@ -1,15 +1,15 @@
 package net.gooday2die.navercafealert;
 
-import me.leoko.advancedban.bukkit.event.PunishmentEvent;
-import me.leoko.advancedban.bukkit.event.RevokePunishmentEvent;
 import net.gooday2die.navercafealert.BanListeners.AdvancedBan;
 import net.gooday2die.navercafealert.BanListeners.LiteBans;
+import net.gooday2die.navercafealert.BanListeners.NormalBanListener;
 import net.gooday2die.navercafealert.Common.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -22,32 +22,19 @@ public final class NaverCafeAlert extends JavaPlugin {
      * - LiteBans from <a href="https://www.spigotmc.org/resources/litebans.3715/">here</a>
      */
     private void detectBanManager() {
-        if (Bukkit.getPluginManager().getPlugin("LiteBans") != null) {
+        if (Bukkit.getPluginManager().getPlugin("LiteBans") != null) { // With LiteBans
             Settings.abstractBanListener = new LiteBans();
             Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert] " +
                     ChatColor.GREEN + "LiteBans" + ChatColor.WHITE + " 플러그인에 연결했습니다.");
-        } else if (Bukkit.getPluginManager().getPlugin("AdvancedBan") != null) {
+        } else if (Bukkit.getPluginManager().getPlugin("AdvancedBan") != null) { // With AdvancedBan
             Settings.abstractBanListener = new AdvancedBan();
             Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert] " +
                     ChatColor.GREEN + "AdvancedBan" + ChatColor.WHITE + " 플러그인에 연결했습니다.");
-        }
-    }
-
-    private class avls implements Listener {
-        @EventHandler
-        public void onPunishmentEvent(PunishmentEvent e) {
-            System.out.println("PunishmentEvent fired.");
-            System.out.println(e.getPunishment());
-        }
-        @EventHandler
-        public void onRevokePunishmentEvent(RevokePunishmentEvent e) {
-            System.out.println("RevokePunishmentEvent fired.");
-            System.out.println(e.getPunishment());
-        }
-
-        @EventHandler
-        public void onPlayerJoin(PlayerJoinEvent e) {
-            System.out.println(e.getPlayer().getName());
+        } else { // With unsupported ban managers (or even they do not have one)
+            Settings.abstractBanListener = new NormalBanListener();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[NaverCafeAlert] " +
+                    ChatColor.WHITE +  "밴 플러그인을 발견하지 못했습니다. 자체적으로 명령어를 감지합니다. (정확도가 떨어질 수 있습니다)");
+            NormalBanListener normalBanListener = (NormalBanListener) Settings.abstractBanListener;
         }
     }
 
@@ -76,9 +63,6 @@ public final class NaverCafeAlert extends JavaPlugin {
                     " 설정을 읽어오는데 에러가 발생했습니다. 플러그인을 종료합니다.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
-
-        Bukkit.getServer().getPluginManager().registerEvents(new avls(), this);
-
     }
 
     @Override

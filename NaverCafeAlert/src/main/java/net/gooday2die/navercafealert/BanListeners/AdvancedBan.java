@@ -2,19 +2,13 @@ package net.gooday2die.navercafealert.BanListeners;
 
 import me.leoko.advancedban.bukkit.event.PunishmentEvent;
 import me.leoko.advancedban.bukkit.event.RevokePunishmentEvent;
-import me.leoko.advancedban.bukkit.listener.InternalListener;
-import me.leoko.advancedban.manager.PunishmentManager;
 import me.leoko.advancedban.utils.Punishment;
 import me.leoko.advancedban.utils.PunishmentType;
 import net.gooday2die.navercafealert.Common.Settings;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 
 /**
@@ -28,13 +22,13 @@ public class AdvancedBan extends AbstractBanListener implements Listener {
      * 2. Hook up the ban plugin's API so that this plugin is able to use their API.
      */
 
-    private AdvancedBanAPIListener apiListener;
+    private AdvancedBanHandler apiListener;
 
     /**
      * A constructor method for class AdvancedBan.
      */
     public AdvancedBan() {
-        this.apiListener  = new AdvancedBanAPIListener();
+        this.apiListener  = new AdvancedBanHandler();
         this.mainEventHandler();
     }
 
@@ -74,7 +68,7 @@ public class AdvancedBan extends AbstractBanListener implements Listener {
     /**
      * A class that processes everything related to AdvancedBan.
      */
-    private static class AdvancedBanAPIListener implements IBanAPIListener {
+    private static class AdvancedBanHandler implements IBanHandler {
 
         /**
          * A method that processes ban by Object provided.

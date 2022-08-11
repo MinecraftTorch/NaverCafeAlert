@@ -19,13 +19,13 @@ import java.util.Objects;
  * A class that takes care of LiteBans API.
  */
 public class LiteBans extends AbstractBanListener {
-    private final LiteBansAPIListener apiListener;
+    private final LiteBansHandler apiListener;
 
     /**
      * A constructor method for class LiteBans.
      */
     public LiteBans() {
-        apiListener = new LiteBansAPIListener();
+        apiListener = new LiteBansHandler();
         this.mainEventHandler();
     }
 
@@ -41,7 +41,7 @@ public class LiteBans extends AbstractBanListener {
      * A private class that is for taking care of extending Events.Listener for LiteBans API.
      * This implements IBanAPIListener and extends Events.Listener for LiteBansAPI.
      */
-    private static class LiteBansAPIListener extends Events.Listener implements IBanAPIListener {
+    private static class LiteBansHandler extends Events.Listener implements IBanHandler {
         /**
          * Called after an entry (ban, mute, warning, kick) is added to the database.
          */

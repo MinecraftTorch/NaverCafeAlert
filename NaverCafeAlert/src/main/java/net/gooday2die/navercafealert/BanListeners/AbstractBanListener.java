@@ -6,7 +6,6 @@ package net.gooday2die.navercafealert.BanListeners;
  */
 public abstract class AbstractBanListener {
     protected String name; // The name of current listener.
-
     /**
      * A constructor method for class AbstractBanListener.
      */
