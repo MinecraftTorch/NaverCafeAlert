@@ -3,6 +3,7 @@ package net.gooday2die.navercafealert;
 import net.gooday2die.navercafealert.BanListeners.AdvancedBan;
 import net.gooday2die.navercafealert.BanListeners.LiteBans;
 import net.gooday2die.navercafealert.BanListeners.NormalBanListener;
+import net.gooday2die.navercafealert.CommandHandler.CommandHandler;
 import net.gooday2die.navercafealert.Common.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public final class NaverCafeAlert extends JavaPlugin {
     /**
@@ -59,6 +61,8 @@ public final class NaverCafeAlert extends JavaPlugin {
                     " 설정을 읽어오는데 에러가 발생했습니다. 플러그인을 종료합니다.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+
+        Objects.requireNonNull(getCommand("nca")).setExecutor(new CommandHandler()); // Register Command.
     }
 
     @Override
